@@ -111,7 +111,7 @@ const headers = {
 
             await registerUser(email, domain, otpPayload, referralPayload, i);
 
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, (Math.random() * 10000) + 10000));      
         }
     } catch (error) {
         console.error('[Error]:', error);

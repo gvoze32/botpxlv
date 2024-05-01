@@ -50,18 +50,7 @@ const headers = {
     var referralCode = readline.question(`[ ${moment().format("HH:mm:ss")} ] ` + 'Reff Code : ');
     var jumlah = readline.question(`[ ${moment().format("HH:mm:ss")} ] ` + 'Jumlah Reff : ');
 
-    let domains = fs.readFileSync('domains.txt', 'utf-8').trim().split('\n');
-    let currentDomainIndex = 0;
-
-    function shuffleDomains() {
-        for (let i = domains.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [domains[i], domains[j]] = [domains[j], domains[i]];
-        }
-        currentDomainIndex = 0;
-    }
-
-    shuffleDomains();
+    const domains = fs.readFileSync('domains.txt', 'utf-8').trim().split('\n');
 
     const otpRequestURL = 'https://api.pixelverse.xyz/api/otp/request';
     const otpVerificationURL = 'https://api.pixelverse.xyz/api/auth/otp';
@@ -104,12 +93,8 @@ const headers = {
 
     try {
         for (let i = 1; i < jumlah; i++) {
-            const domain = domains[currentDomainIndex];
-            currentDomainIndex = (currentDomainIndex + 1) % domains.length;
-
-            if (currentDomainIndex === 0) {
-                shuffleDomains();
-            }
+            const randomIndex = Math.floor(Math.random() * domains.length);
+            const domain = domains[randomIndex];
 
             var name = random.first()
             var lastname = random.last()

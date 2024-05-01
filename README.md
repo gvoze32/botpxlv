@@ -9,7 +9,7 @@
 ## Usage
 1. Run domains getter `python3 get_domains.py`
 2. Run the script: `node index.js`
-3. Follow the prompts to input the domain email, referral code, and the number of referrals you want to generate.
+3. Follow the prompts to input the referral code, and the number of referrals you want to generate.
 4. The script will then proceed to register users with randomly generated email addresses and refer them using the provided referral code.
 
 ## Additional Notes

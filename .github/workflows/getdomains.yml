@@ -1,8 +1,6 @@
 name: Get Domains
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
   schedule:
     - cron: '*/30 * * * *'

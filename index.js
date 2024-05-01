@@ -4,7 +4,8 @@ const cheerio = require('cheerio');
 const random = require('random-name');
 const randomize = require('randomatic');
 const moment = require('moment');
-const readline = require('readline-sync')
+const readline = require('readline-sync');
+const fs = require('fs');
 
 const randstr = length =>
     new Promise((resolve, reject) => {
@@ -45,11 +46,11 @@ const headers = {
   'Authorization': null
 };
 
-
 (async() => {
-    var domain = readline.question(`[ ${moment().format("HH:mm:ss")} ] ` + 'Domain email : ');
     var referralCode = readline.question(`[ ${moment().format("HH:mm:ss")} ] ` + 'Reff Code : ');
     var jumlah = readline.question(`[ ${moment().format("HH:mm:ss")} ] ` + 'Jumlah Reff : ');
+
+    const domains = fs.readFileSync('domains.txt', 'utf-8').trim().split('\n');
 
     const otpRequestURL = 'https://api.pixelverse.xyz/api/otp/request';
     const otpVerificationURL = 'https://api.pixelverse.xyz/api/auth/otp';
@@ -65,7 +66,7 @@ const headers = {
         }
     }
 
-    async function registerUser(email, otpPayload, referralPayload, i) {
+    async function registerUser(email, domain, otpPayload, referralPayload, i) {
         try {
             const otpResponse = await makeRequest(otpRequestURL, otpPayload);
             console.log(`[ ${moment().format("HH:mm:ss")} ] ` + `Mencoba mendaftar menggunakan email => ${email}`);
@@ -73,7 +74,7 @@ const headers = {
             let otp;
             let startTime = new Date().getTime();
             do {
-                otp = await functionGetLink(uname, domain);
+                otp = await functionGetLink(email.split('@')[0], domain);
                 console.log(`[ ${moment().format("HH:mm:ss")} ] ` + `Menunggu kode verifikasi...`);
             } while (!otp && (new Date().getTime() - startTime) < 30000);
             console.log(`[ ${moment().format("HH:mm:ss")} ] ` + `Kode verifikasi: ${otp}`);
@@ -92,7 +93,7 @@ const headers = {
 
     try {
         for (let i = 1; i < jumlah; i++) {
-            var domain = domain;
+            const domain = domains[(i - 1) % domains.length];
             var name = random.first()
             var lastname = random.last()
             var uname = `${name}${lastname}${randomize('0', 2)}`
@@ -106,7 +107,7 @@ const headers = {
                 referralCode: referralCode,
             };
 
-            await registerUser(email, otpPayload, referralPayload, i);
+            await registerUser(email, domain, otpPayload, referralPayload, i);
 
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
@@ -114,5 +115,3 @@ const headers = {
         console.error('[Error]:', error);
     }
 })();
-
-
